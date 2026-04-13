@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Courses</title>
+</head>
+<body>
+
+<h1>📚 جميع الكورسات</h1>
+
+{% for course in courses %}
+    <div>
+        <h3>{{ course.title }}</h3>
+        <p>{{ course.description }}</p>
+
+        <a href="/course/{{ course.id }}/">
+            دخول الدورة
+        </a>
+    </div>
+    <hr>
+{% endfor %}
+
+</body>
+</html>

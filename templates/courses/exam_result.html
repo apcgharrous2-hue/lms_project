@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Result</title>
+</head>
+<body>
+
+<h1>🎯 نتيجتك</h1>
+
+<p>لقد حصلت على: {{ score }} / {{ total }}</p>
+
+{% if score == total %}
+    <p style="color:green;">🎉 ممتاز!</p>
+{% else %}
+    <p style="color:red;">حاول مرة أخرى</p>
+{% endif %}
+
+<a href="/courses/">العودة</a>
+
+</body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>كورساتي</title>
+</head>
+<body>
+
+<h1>🎓 كورساتي</h1>
+
+{% for enroll in enrollments %}
+    <div>
+        <h3>{{ enroll.course.title }}</h3>
+        <a href="/course/{{ enroll.course.id }}/">دخول</a>
+    </div>
+    <hr>
+{% empty %}
+    <p>لم تسجل في أي كورس ❌</p>
+{% endfor %}
+
+</body>
+</html>

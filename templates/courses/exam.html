@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Exam</title>
+</head>
+<body>
+
+<h1>📝 امتحان الكورس</h1>
+
+<form method="post">
+    {% csrf_token %}
+
+    {% for question in questions %}
+        <h3>{{ question.text }}</h3>
+
+        {% for choice in question.choice_set.all %}
+            <label>
+                <input type="radio" name="{{ question.id }}" value="{{ choice.id }}">
+                {{ choice.text }}
+            </label><br>
+        {% endfor %}
+
+        <hr>
+    {% endfor %}
+
+    <button type="submit">إرسال الإجابات</button>
+
+</form>
+
+</body>
+</html>

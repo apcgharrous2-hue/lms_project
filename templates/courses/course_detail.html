@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ course.title }}</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #f4f6f9;
+            margin: 0;
+        }
+
+        .header {
+            background: #2c3e50;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .progress {
+            background: #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            background: #28a745;
+            height: 20px;
+            color: white;
+            text-align: center;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px;
+            margin-bottom: 10px;
+            margin-right: 10px;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .enroll { background: green; }
+        .unenroll { background: red; }
+        .exam { background: blue; }
+        .certificate { background: gold; color: black; }
+
+        .lesson {
+            background: white;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        iframe {
+            width: 100%;
+            height: 300px;
+            border-radius: 10px;
+        }
+
+        .done-btn {
+            display: inline-block;
+            margin-top: 10px;
+            color: blue;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="header">
+    📚 {{ course.title }}
+</div>
+
+<div class="container">
+
+    <p>{{ course.description }}</p>
+
+    <!-- أزرار التحكم -->
+    {% if is_enrolled %}
+        <a href="/unenroll/{{ course.id }}/" class="btn unenroll">
+            إلغاء التسجيل ❌
+        </a>
+    {% else %}
+        <a href="/enroll/{{ course.id }}/" class="btn enroll">
+            التسجيل في الدورة ✅
+        </a>
+    {% endif %}
+
+    <a href="/exam/{{ course.id }}/" class="btn exam">
+        📝 دخول الامتحان
+    </a>
+
+    {% if progress == 100 %}
+        <a href="/certificate/{{ course.id }}/" class="btn certificate">
+            🎓 تحميل الشهادة
+        </a>
+    {% endif %}
+
+    <!-- التقدم -->
+    <h3>📊 نسبة التقدم: {{ progress }}%</h3>
+
+    <div class="progress">
+        <div class="progress-bar" style="width: {{ progress }}%;">
+            {{ progress }}%
+        </div>
+    </div>
+
+    <h2>📚 الدروس</h2>
+
+    {% for lesson in lessons %}
+        <div class="lesson">
+
+            <h3>{{ lesson.title }}</h3>
+
+            {% if lesson.video_url %}
+                <iframe src="{{ lesson.video_url }}" frameborder="0" allowfullscreen></iframe>
+            {% endif %}
+
+            <p>{{ lesson.content }}</p>
+
+            <a href="/lesson/done/{{ lesson.id }}/" class="done-btn">
+                ✔ تم مشاهدة الدرس
+            </a>
+
+        </div>
+    {% empty %}
+        <p>لا توجد دروس ❌</p>
+    {% endfor %}
+
+</div>
+
+</body>
+</html>
