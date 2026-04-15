@@ -1,1 +1,1 @@
-web: gunicorn lms_project.wsgi:application
+web: gunicorn lms_project.wsgi:application --bind 0.0.0.0:$PORT
