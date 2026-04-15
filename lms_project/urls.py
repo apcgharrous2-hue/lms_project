@@ -2,13 +2,15 @@ from django.contrib import admin
 from django.urls import path, include
 from django.shortcuts import redirect
 
+def home_redirect(request):
+    return redirect('/courses/')
+
 urlpatterns = [
-    # لوحة الإدارة
     path('admin/', admin.site.urls),
 
-    # الصفحة الرئيسية → تحويل إلى الكورسات
-    path('', lambda request: redirect('courses')),
+    # الصفحة الرئيسية
+    path('', home_redirect),
 
-    # روابط تطبيق courses
+    # تطبيق courses
     path('', include('courses.urls')),
 ]
