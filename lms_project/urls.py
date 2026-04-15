@@ -26,3 +26,4 @@ path('unenroll/<int:course_id>/', unenroll_course),
 path('my-courses/', my_courses),
 path('exam/<int:course_id>/', course_exam),
 path('certificate/<int:course_id>/', certificate),
+]
