@@ -5,13 +5,19 @@ from django.http import HttpResponse
 
 from .models import Course, Enrollment
 
+
+# =========================
+# CERTIFICATE (النسخة الصحيحة)
+# =========================
 @login_required
-def generate_certificate(request, course_id):
+def certificate(request, course_id):
     course = get_object_or_404(Course, id=course_id)
 
     return HttpResponse(
         f"Certificate: You completed {course.title}"
     )
+
+
 # =========================
 # LOGIN
 # =========================
@@ -32,6 +38,9 @@ def login_view(request):
     return render(request, 'accounts/login.html')
 
 
+# =========================
+# LOGOUT
+# =========================
 def logout_view(request):
     logout(request)
     return redirect('/login/')
@@ -109,7 +118,7 @@ def my_courses(request):
 
 
 # =========================
-# MARK LESSON DONE (إذا عندك lesson system)
+# MARK LESSON DONE
 # =========================
 @login_required
 def mark_lesson_done(request, lesson_id):
@@ -117,24 +126,12 @@ def mark_lesson_done(request, lesson_id):
 
 
 # =========================
-# EXAM (اختياري إذا موجود عندك)
+# EXAM
 # =========================
 @login_required
 def course_exam(request, course_id):
     course = get_object_or_404(Course, id=course_id)
 
     return render(request, 'courses/exam.html', {
-        'course': course
-    })
-
-
-# =========================
-# CERTIFICATE (اختياري)
-# =========================
-@login_required
-def certificate(request, course_id):
-    course = get_object_or_404(Course, id=course_id)
-
-    return render(request, 'courses/certificate.html', {
         'course': course
     })
