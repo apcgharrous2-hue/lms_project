@@ -13,7 +13,6 @@ urlpatterns = [
 
     # تطبيق courses
     path('', include('courses.urls')),
-]
 path('login/', login_view, name='login'),
 path('logout/', logout_view, name='logout'),
 path('login/', login_view),
