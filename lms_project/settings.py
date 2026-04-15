@@ -58,10 +58,10 @@ ROOT_URLCONF = 'lms_project.urls'
 # ======================
 # TEMPLATES
 # ======================
-TEMPLATES = [
+EMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / "templates"],  # ✅ مهم جدًا
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
