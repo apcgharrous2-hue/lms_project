@@ -1,10 +1,17 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 
 from .models import Course, Enrollment
 
+@login_required
+def generate_certificate(request, course_id):
+    course = get_object_or_404(Course, id=course_id)
 
+    return HttpResponse(
+        f"Certificate: You completed {course.title}"
+    )
 # =========================
 # LOGIN
 # =========================
