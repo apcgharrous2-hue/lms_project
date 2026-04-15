@@ -1,19 +1,18 @@
 from django.urls import path
-from .views import *
-
+from . import views
 
 urlpatterns = [
-    path('courses/', course_list, name='courses'),
-    path('course/<int:course_id>/', course_detail, name='course_detail'),
+    path('courses/', views.course_list, name='courses'),
+    path('course/<int:course_id>/', views.course_detail),
 
-    path('enroll/<int:course_id>/', enroll_course, name='enroll'),
-    path('unenroll/<int:course_id>/', unenroll_course, name='unenroll'),
+    path('enroll/<int:course_id>/', views.enroll_course),
+    path('unenroll/<int:course_id>/', views.unenroll_course),
 
-    path('lesson/done/<int:lesson_id>/', mark_lesson_done, name='mark_done'),
+    path('lesson/done/<int:lesson_id>/', views.mark_lesson_done),
 
-    path('my-courses/', my_courses, name='my_courses'),
-     # ⭐ هذا مهم
-    path('exam/<int:course_id>/', course_exam, name='exam'),
-    path('certificate/<int:course_id>/', generate_certificate, name='certificate'),
-    
+    path('my-courses/', views.my_courses),
+
+    path('exam/<int:course_id>/', views.course_exam),
+
+    path('certificate/<int:course_id>/', views.certificate),
 ]
