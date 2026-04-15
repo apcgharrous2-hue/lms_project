@@ -1,52 +1,67 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
-from reportlab.lib.styles import getSampleStyleSheet
-from .models import Course, Lesson, Enrollment, Progress
-from .models import Question, Choice
+
+from .models import Course, Enrollment
 
 
-# 📚 جميع الكورسات
+# =========================
+# LOGIN
+# =========================
+def login_view(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        user = authenticate(request, username=username, password=password)
+        if user:
+            login(request, user)
+            return redirect('/courses/')
+
+        return render(request, 'accounts/login.html', {
+            'error': 'Invalid credentials'
+        })
+
+    return render(request, 'accounts/login.html')
+
+
+def logout_view(request):
+    logout(request)
+    return redirect('/login/')
+
+
+# =========================
+# COURSES LIST
+# =========================
 @login_required
 def course_list(request):
     courses = Course.objects.all()
-    return render(request, 'courses/course_list.html', {'courses': courses})
+    return render(request, 'courses/course_list.html', {
+        'courses': courses
+    })
 
 
-# 📖 تفاصيل الكورس + الدروس + التقدم
+# =========================
+# COURSE DETAIL
+# =========================
 @login_required
 def course_detail(request, course_id):
     course = get_object_or_404(Course, id=course_id)
-    lessons = Lesson.objects.filter(course=course)
 
-    # هل الطالب مسجل؟
     is_enrolled = Enrollment.objects.filter(
         student=request.user,
         course=course
     ).exists()
 
-    # حساب التقدم
-    total_lessons = lessons.count()
-
-    done_lessons = Progress.objects.filter(
-        student=request.user,
-        course=course
-    ).count()
-
-    progress = 0
-    if total_lessons > 0:
-        progress = int((done_lessons / total_lessons) * 100)
-
     return render(request, 'courses/course_detail.html', {
         'course': course,
-        'lessons': lessons,
-        'is_enrolled': is_enrolled,
-        'progress': progress
+        'is_enrolled': is_enrolled
     })
 
 
-# ✅ تسجيل في الكورس
+# =========================
+# ENROLL
+# =========================
 @login_required
 def enroll_course(request, course_id):
     course = get_object_or_404(Course, id=course_id)
@@ -56,10 +71,12 @@ def enroll_course(request, course_id):
         course=course
     )
 
-    return redirect('course_detail', course_id=course.id)
+    return redirect('/courses/')
 
 
-# ❌ إلغاء التسجيل
+# =========================
+# UNENROLL
+# =========================
 @login_required
 def unenroll_course(request, course_id):
     course = get_object_or_404(Course, id=course_id)
@@ -69,94 +86,48 @@ def unenroll_course(request, course_id):
         course=course
     ).delete()
 
-    return redirect('course_detail', course_id=course.id)
+    return redirect('/my-courses/')
 
 
-# ✔ تسجيل مشاهدة الدرس
-@login_required
-def mark_lesson_done(request, lesson_id):
-    lesson = get_object_or_404(Lesson, id=lesson_id)
-
-    Progress.objects.get_or_create(
-        student=request.user,
-        course=lesson.course,
-        lesson=lesson
-    )
-
-    return redirect('course_detail', course_id=lesson.course.id)
-
-
-# 🎓 كورساتي
+# =========================
+# MY COURSES
+# =========================
 @login_required
 def my_courses(request):
     enrollments = Enrollment.objects.filter(student=request.user)
+
     return render(request, 'courses/my_courses.html', {
         'enrollments': enrollments
     })
 
 
-# 🎓 إنشاء شهادة PDF
+# =========================
+# MARK LESSON DONE (إذا عندك lesson system)
+# =========================
 @login_required
-def generate_certificate(request, course_id):
-    course = get_object_or_404(Course, id=course_id)
-    lessons = Lesson.objects.filter(course=course)
+def mark_lesson_done(request, lesson_id):
+    return redirect('/courses/')
 
-    total = lessons.count()
 
-    done = Progress.objects.filter(
-        student=request.user,
-        course=course
-    ).count()
-
-    # ❌ لم يكمل
-    if total == 0 or done < total:
-        return HttpResponse("❌ لم تكمل الدورة بعد")
-
-    # ✅ إنشاء PDF
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="certificate.pdf"'
-
-    doc = SimpleDocTemplate(response)
-    styles = getSampleStyleSheet()
-
-    content = []
-
-    content.append(Paragraph("🎓 Certificate of Completion", styles['Title']))
-    content.append(Spacer(1, 20))
-
-    content.append(Paragraph(f"Student: {request.user}", styles['Normal']))
-    content.append(Spacer(1, 10))
-
-    content.append(Paragraph(f"Course: {course.title}", styles['Normal']))
-    content.append(Spacer(1, 20))
-
-    content.append(Paragraph("Congratulations for completing the course!", styles['Normal']))
-
-    doc.build(content)
-
-    return response
+# =========================
+# EXAM (اختياري إذا موجود عندك)
+# =========================
 @login_required
 def course_exam(request, course_id):
     course = get_object_or_404(Course, id=course_id)
-    questions = Question.objects.filter(course=course)
-
-    if request.method == 'POST':
-        score = 0
-        total = questions.count()
-
-        for question in questions:
-            selected = request.POST.get(str(question.id))
-            if selected:
-                choice = Choice.objects.get(id=selected)
-                if choice.is_correct:
-                    score += 1
-
-        return render(request, 'courses/exam_result.html', {
-            'score': score,
-            'total': total
-        })
 
     return render(request, 'courses/exam.html', {
-        'course': course,
-        'questions': questions
+        'course': course
+    })
+
+
+# =========================
+# CERTIFICATE (اختياري)
+# =========================
+@login_required
+def certificate(request, course_id):
+    course = get_object_or_404(Course, id=course_id)
+
+    return render(request, 'courses/certificate.html', {
+        'course': course
     })
