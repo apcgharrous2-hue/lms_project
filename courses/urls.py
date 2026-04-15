@@ -1,14 +1,6 @@
 from django.urls import path
 from .views import *
-from django.http import HttpResponse
 
-@login_required
-def generate_certificate(request, course_id):
-    course = get_object_or_404(Course, id=course_id)
-
-    return HttpResponse(
-        f"Certificate: You completed {course.title}"
-    )
 
 urlpatterns = [
     path('courses/', course_list, name='courses'),
