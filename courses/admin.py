@@ -1,9 +1,27 @@
 from django.contrib import admin
-from .models import Course, Enrollment, Lesson
-from .models import Question, Choice
+from .models import Course, Enrollment, Lesson, Question, Choice
 
-admin.site.register(Course)
-admin.site.register(Enrollment)
-admin.site.register(Lesson)
-admin.site.register(Question)
-admin.site.register(Choice)
+
+@admin.register(Course)
+class CourseAdmin(admin.ModelAdmin):
+    list_display = ('id', 'title')
+
+
+@admin.register(Enrollment)
+class EnrollmentAdmin(admin.ModelAdmin):
+    list_display = ('id', 'student', 'course')
+
+
+@admin.register(Lesson)
+class LessonAdmin(admin.ModelAdmin):
+    list_display = ('id', 'title', 'course')
+
+
+@admin.register(Question)
+class QuestionAdmin(admin.ModelAdmin):
+    list_display = ('id', 'text', 'course')
+
+
+@admin.register(Choice)
+class ChoiceAdmin(admin.ModelAdmin):
+    list_display = ('id', 'text', 'question')
