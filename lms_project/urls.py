@@ -8,9 +8,8 @@ def home_redirect(request):
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    # الصفحة الرئيسية
     path('', home_redirect),
 
-    # كل شيء داخل app courses
     path('', include('courses.urls')),
+    path('', include('accounts.urls')),  # 👈 هذا مهم جدًا
 ]
