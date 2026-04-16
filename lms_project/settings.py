@@ -1,15 +1,8 @@
 from pathlib import Path
 import os
 
-# ======================
-# BASE DIRECTORY
-# ======================
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# ======================
-# SECURITY
-# ======================
 SECRET_KEY = 'django-insecure-change-this-key'
 
 DEBUG = True
@@ -17,9 +10,6 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 
-# ======================
-# APPLICATIONS
-# ======================
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -30,12 +20,10 @@ INSTALLED_APPS = [
 
     # apps
     'courses',
+    'accounts',  # ✅ مهم
 ]
 
 
-# ======================
-# MIDDLEWARE
-# ======================
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -49,19 +37,16 @@ MIDDLEWARE = [
 ]
 
 
-# ======================
-# ROOT URL
-# ======================
 ROOT_URLCONF = 'lms_project.urls'
 
 
 # ======================
-# TEMPLATES
+# TEMPLATES (مصَحح)
 # ======================
-EMPLATES = [
+TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / "templates"],  # ✅ مهم جدًا
+        'DIRS': [BASE_DIR / "templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -75,15 +60,9 @@ EMPLATES = [
 ]
 
 
-# ======================
-# WSGI
-# ======================
 WSGI_APPLICATION = 'lms_project.wsgi.application'
 
 
-# ======================
-# DATABASE
-# ======================
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -92,28 +71,14 @@ DATABASES = {
 }
 
 
-# ======================
-# PASSWORD VALIDATION
-# ======================
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
 
-# ======================
-# LANGUAGE / TIME
-# ======================
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'Africa/Algiers'
@@ -123,25 +88,15 @@ USE_I18N = True
 USE_TZ = True
 
 
-# ======================
-# STATIC FILES
-# ======================
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-# WhiteNoise (للنشر)
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
-# ======================
-# DEFAULT PRIMARY KEY
-# ======================
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-# ======================
-# LOGIN (اختياري مفيد)
-# ======================
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/courses/'
 LOGOUT_REDIRECT_URL = '/login/'
