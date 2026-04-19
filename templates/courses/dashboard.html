@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block title %}لوحة التحكم{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h1 class="mb-4 text-white">
+        <i class="fas fa-tachometer-alt me-2"></i>
+        مرحباً، {{ user.username }}!
+    </h1>
+    
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="stats-card">
+                <i class="fas fa-book fa-3x mb-3" style="color: #4f46e5;"></i>
+                <div class="stats-number">{{ total_courses }}</div>
+                <div class="stats-label">إجمالي الدورات</div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="stats-card">
+                <i class="fas fa-users fa-3x mb-3" style="color: #764ba2;"></i>
+                <div class="stats-number">{{ my_courses }}</div>
+                <div class="stats-label">دوراتي المسجلة</div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="stats-card">
+                <i class="fas fa-check-circle fa-3x mb-3" style="color: #10b981;"></i>
+                <div class="stats-number">{{ completed_courses }}</div>
+                <div class="stats-label">الدورات المكتملة</div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="stats-card">
+                <i class="fas fa-clock fa-3x mb-3" style="color: #f59e0b;"></i>
+                <div class="stats-number">{{ in_progress }}</div>
+                <div class="stats-label">قيد التقدم</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Recent Activity -->
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-history me-2"></i>
+                        آخر النشاطات
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if recent_activities %}
+                        <div class="list-group list-group-flush">
+                            {% for activity in recent_activities %}
+                                <div class="list-group-item">
+                                    <i class="fas fa-circle text-success me-2" style="font-size: 0.5rem;"></i>
+                                    {{ activity.description }}
+                                    <small class="text-muted d-block mt-1">{{ activity.created_at|timesince }} مضى</small>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted text-center mb-0">لا توجد نشاطات حديثة</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-trophy me-2"></i>
+                        إنجازاتي
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="progress mb-3" style="height: 30px;">
+                        <div class="progress-bar bg-success" style="width: {{ progress_percentage }}%">
+                            {{ progress_percentage }}%
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'my_courses' %}" class="btn btn-outline-primary">
+                            <i class="fas fa-play-circle me-2"></i>
+                            متابعة التعلم
+                        </a>
+                        <a href="{% url 'course_list' %}" class="btn btn-primary">
+                            <i class="fas fa-plus-circle me-2"></i>
+                            استكشاف دورات جديدة
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
