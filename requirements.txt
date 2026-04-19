@@ -1,4 +1,9 @@
 Django==4.2.29
-gunicorn
-whitenoise
-reportlab
+gunicorn==21.2.0
+whitenoise==6.6.0
+reportlab==4.0.8
+arabic-reshaper==2.1.4
+python-bidi==0.4.2
+Pillow==10.1.0
+django-crispy-forms==2.1
+crispy-bootstrap5==0.7
