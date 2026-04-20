@@ -1,28 +1,23 @@
 from django.contrib import admin
 from django.urls import path, include
-from django.shortcuts import redirect
+from django.http import HttpResponse
+from django.contrib.auth.models import User
 
 # مؤقت - احذفه بعد الاستخدام
-from django.contrib.auth.models import User
-from django.http import HttpResponse
-
 def create_admin(request):
     if not User.objects.filter(username='admin').exists():
         User.objects.create_superuser('admin', 'admin@example.com', 'Admin123456')
         return HttpResponse("✅ Admin created! Username: admin, Password: Admin123456")
     else:
-        User.objects.filter(username='admin').update(password=make_password('Admin123456'))
+        # تحديث كلمة السر
+        u = User.objects.get(username='admin')
+        u.set_password('Admin123456')
+        u.save()
         return HttpResponse("✅ Admin password reset to: Admin123456")
 
-def home_redirect(request):
-    return redirect('/courses/')
-
 urlpatterns = [
-    path('admin/', admin.site.urls),
-
-    path('', home_redirect),
-
-    path('', include('courses.urls')),
     path('create-admin/', create_admin, name='create_admin'),
-    path('', include('accounts.urls')),  # 👈 مهم جدًا
+    path('admin/', admin.site.urls),
+    path('courses/', include('courses.urls')),
+    path('', include('accounts.urls')),
 ]
