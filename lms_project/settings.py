@@ -3,6 +3,7 @@ Django settings for lms_project project.
 """
 
 from pathlib import Path
+import dj_database_url
 import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -57,17 +58,10 @@ WSGI_APPLICATION = 'lms_project.wsgi.application'
 # قاعدة البيانات - Supabase PostgreSQL
 # ==========================================
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres.jnhbenohgmuritofzwtk',
-        'PASSWORD': 'GHarrous2941kh',
-        'HOST': 'aws-0-eu-central-1.pooler.supabase.com',
-        'PORT': '6543',
-        'OPTIONS': {
-            'sslmode': 'require',
-        },
-    }
+    'default': dj_database_url.config(
+        default='postgresql://neondb_owner:npg_HMYRUB4zXKj6@ep-red-term-algwz47i.c-3.eu-central-1.aws.neon.tech/neondb?sslmode=require',
+        conn_max_age=600,
+    )
 }
 
 AUTH_PASSWORD_VALIDATORS = [
