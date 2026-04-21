@@ -89,15 +89,15 @@ def course_detail(request, course_id):
 # ENROLL
 # =========================
 @login_required
-def enroll_course(request, course_id):
+def unenroll_course(request, course_id):
     course = get_object_or_404(Course, id=course_id)
 
-    Enrollment.objects.get_or_create(
+    Enrollment.objects.filter(
         student=request.user,
         course=course
-    )
+    ).delete()
 
-    return redirect('/courses/')
+    return redirect('courses:course_detail', course_id=course_id)
 
 
 # =========================
