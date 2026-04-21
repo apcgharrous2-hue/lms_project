@@ -86,21 +86,21 @@
 
     <!-- أزرار التحكم -->
     {% if is_enrolled %}
-        <a href="/unenroll/{{ course.id }}/" class="btn unenroll">
+        <a href="{% url 'courses:unenroll' course.id %}" class="btn unenroll">
             إلغاء التسجيل ❌
         </a>
     {% else %}
-        <a href="/enroll/{{ course.id }}/" class="btn enroll">
+        <a href="{% url 'courses:enroll' course.id %}" class="btn enroll">
             التسجيل في الدورة ✅
         </a>
     {% endif %}
 
-    <a href="/exam/{{ course.id }}/" class="btn exam">
+    <a href="{% url 'courses:exam' course.id %}" class="btn exam">
         📝 دخول الامتحان
     </a>
 
     {% if progress == 100 %}
-        <a href="/certificate/{{ course.id }}/" class="btn certificate">
+        <a href="{% url 'courses:certificate' course.id %}" class="btn certificate">
             🎓 تحميل الشهادة
         </a>
     {% endif %}
@@ -127,7 +127,7 @@
 
             <p>{{ lesson.content }}</p>
 
-            <a href="/lesson/done/{{ lesson.id }}/" class="done-btn">
+            <a href="{% url 'courses:mark_done' lesson.id %}" class="done-btn">
                 ✔ تم مشاهدة الدرس
             </a>
 
