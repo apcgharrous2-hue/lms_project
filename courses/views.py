@@ -69,11 +69,14 @@ def course_detail(request, course_id):
         course=course
     ).exists()
 
+    # جلب الدروس إذا كان مسجلاً
+    lessons = course.lessons.all().order_by('order') if is_enrolled else []
+
     return render(request, 'courses/course_detail.html', {
         'course': course,
-        'is_enrolled': is_enrolled
+        'is_enrolled': is_enrolled,
+        'lessons': lessons,  # أضفنا هذا السطر
     })
-
 
 # =========================
 # ENROLL
