@@ -1,24 +1,30 @@
 from django.urls import path
 from . import views
 
+app_name = 'courses'
+
 urlpatterns = [
-    path('courses/', views.course_list, name='courses'),
+    # الصفحة الرئيسية للدورات
+    path('', views.course_list, name='course_list'),
 
-    path('course/<int:course_id>/', views.course_detail, name='course_detail'),
+    # تفاصيل الدورة
+    path('<int:course_id>/', views.course_detail, name='course_detail'),
 
-    path('enroll/<int:course_id>/', views.enroll_course, name='enroll'),
+    # التسجيل في الدورة
+    path('<int:course_id>/enroll/', views.enroll_course, name='enroll'),
 
-    path('unenroll/<int:course_id>/', views.unenroll_course, name='unenroll'),
+    # إلغاء التسجيل
+    path('<int:course_id>/unenroll/', views.unenroll_course, name='unenroll'),
 
-    path('lesson/done/<int:lesson_id>/', views.mark_lesson_done, name='mark_done'),
+    # تحديد الدرس كمكتمل
+    path('lesson/<int:lesson_id>/done/', views.mark_lesson_done, name='mark_done'),
 
+    # دوراتي
     path('my-courses/', views.my_courses, name='my_courses'),
 
-    path('exam/<int:course_id>/', views.course_exam, name='exam'),
+    # الامتحان
+    path('<int:course_id>/exam/', views.course_exam, name='exam'),
 
-    path('certificate/<int:course_id>/', views.certificate, name='certificate'),
-
-    path('login/', views.login_view, name='login'),
-
-    path('logout/', views.logout_view, name='logout'),
+    # الشهادة
+    path('<int:course_id>/certificate/', views.certificate, name='certificate'),
 ]
