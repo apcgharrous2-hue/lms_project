@@ -1,23 +1,30 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Courses</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-<h1>📚 جميع الكورسات</h1>
-
-{% for course in courses %}
-    <div>
-        <h3>{{ course.title }}</h3>
-        <p>{{ course.description }}</p>
-
-        <a href="/course/{{ course.id }}/">
-            دخول الدورة
-        </a>
-    </div>
-    <hr>
-{% endfor %}
-
-</body>
-</html>
+{% block content %}
+<div class="container">
+    <h1 class="my-4">الدورات المتاحة</h1>
+    
+    {% if courses %}
+        <div class="row">
+            {% for course in courses %}
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ course.title }}</h5>
+                            <p class="card-text">{{ course.description|truncatewords:20 }}</p>
+                            <p><strong>المدرس:</strong> {{ course.instructor.username }}</p>
+                            <a href="{% url 'courses:course_detail' course.id %}" class="btn btn-primary">
+                                عرض الدورة
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            لا توجد دورات متاحة حالياً.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
