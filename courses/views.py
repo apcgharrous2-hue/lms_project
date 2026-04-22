@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
-
+from .models import Lesson 
 from .models import Course, Enrollment
 
 
@@ -61,7 +61,8 @@ def course_list(request):
 # COURSE DETAIL
 # =========================
 @login_required
-def course_detail(request, course_id):
+def course_detail(request, course_id): # أضف هذا إذا لم يكن موجوداً في الأعلى
+    
     course = get_object_or_404(Course, id=course_id)
 
     is_enrolled = Enrollment.objects.filter(
@@ -69,10 +70,9 @@ def course_detail(request, course_id):
         course=course
     ).exists()
 
-    # جلب الدروس (بدون شرط is_enrolled مؤقتاً)
-    lessons = course.lessons.all().order_by('order')
+    # استخدام Lesson.objects.filter بدلاً من course.lessons
+    lessons = Lesson.objects.filter(course=course).order_by('order')
 
-    # حساب نسبة التقدم
     progress = 0
 
     return render(request, 'courses/course_detail.html', {
