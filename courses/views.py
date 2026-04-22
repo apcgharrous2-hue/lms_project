@@ -91,6 +91,9 @@ def course_detail(request, course_id):
 # =========================
 # ENROLL
 # =========================
+# =========================
+# ENROLL
+# =========================
 @login_required
 def enroll_course(request, course_id):
     course = get_object_or_404(Course, id=course_id)
@@ -100,7 +103,8 @@ def enroll_course(request, course_id):
         course=course
     )
 
-    return redirect('courses:course_detail', course_id=course_id)
+    # طريقة مباشرة بدون اسم المسار
+    return redirect(f'/courses/{course_id}/')
 
 
 # =========================
@@ -115,8 +119,8 @@ def unenroll_course(request, course_id):
         course=course
     ).delete()
 
-    return redirect('courses:course_detail', course_id=course_id)
-
+    # طريقة مباشرة بدون اسم المسار
+    return redirect(f'/courses/{course_id}/')
 # =========================
 # MY COURSES
 # =========================
