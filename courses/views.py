@@ -69,22 +69,18 @@ def course_detail(request, course_id):
         course=course
     ).exists()
 
-    lessons = course.lessons.all().order_by('order') if is_enrolled else []
-    
+    # جلب الدروس (بدون شرط is_enrolled مؤقتاً)
+    lessons = course.lessons.all().order_by('order')
+
     # حساب نسبة التقدم
     progress = 0
-    if is_enrolled and lessons:
-        total_lessons = lessons.count()
-        completed_lessons = 0  # يمكنك إضافة نموذج لتتبع الدروس المكتملة لاحقاً
-        progress = int((completed_lessons / total_lessons) * 100) if total_lessons > 0 else 0
 
     return render(request, 'courses/course_detail.html', {
         'course': course,
         'is_enrolled': is_enrolled,
         'lessons': lessons,
-        'progress': progress,  # أضف هذا
+        'progress': progress,
     })
-
 # =========================
 # ENROLL
 # =========================
