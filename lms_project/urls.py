@@ -1,9 +1,18 @@
-from django.core.management import call_command
+from django.contrib import admin
+from django.urls import path, include
 from django.http import HttpResponse
 
 def run_migrate(request):
+    import os
+    import django
+    
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'lms_project.settings')
+    django.setup()
+    
+    from django.core.management import call_command
     call_command('migrate', interactive=False)
-    return HttpResponse("✅ Migrations done!")
+    
+    return HttpResponse("✅ Migrations completed successfully!")
 
 urlpatterns = [
     path('run-migrate/', run_migrate),
