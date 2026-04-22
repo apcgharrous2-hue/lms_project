@@ -61,7 +61,8 @@ def course_list(request):
 # COURSE DETAIL
 # =========================
 @login_required
-def course_detail(request, course_id): # أضف هذا إذا لم يكن موجوداً في الأعلى
+def course_detail(request, course_id):
+    from .models import Lesson
     
     course = get_object_or_404(Course, id=course_id)
 
@@ -70,8 +71,8 @@ def course_detail(request, course_id): # أضف هذا إذا لم يكن موج
         course=course
     ).exists()
 
-    # استخدام Lesson.objects.filter بدلاً من course.lessons
-    lessons = Lesson.objects.filter(course=course).order_by('order')
+    # بدون order_by أو باستخدام id
+    lessons = Lesson.objects.filter(course=course)
 
     progress = 0
 
