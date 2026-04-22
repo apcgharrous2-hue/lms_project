@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from .models import Lesson 
 from .models import Course, Enrollment
+from .models import LessonProgress
 
 
 # =========================
@@ -60,22 +61,21 @@ def course_list(request):
 # =========================
 # COURSE DETAIL
 # =========================
-@login_required
 def course_detail(request, course_id):
-    from .models import Lesson
-    
     course = get_object_or_404(Course, id=course_id)
-
-    is_enrolled = Enrollment.objects.filter(
-        student=request.user,
-        course=course
-    ).exists()
-
-    # بدون order_by أو باستخدام id
     lessons = Lesson.objects.filter(course=course)
-
+    
+    is_enrolled = Enrollment.objects.filter(student=request.user, course=course).exists()
+    
     progress = 0
-
+    if is_enrolled and lessons.exists():
+        completed = LessonProgress.objects.filter(
+            user=request.user,
+            lesson__course=course,
+            completed=True
+        ).count()
+        progress = int((completed / lessons.count()) * 100)
+    
     return render(request, 'courses/course_detail.html', {
         'course': course,
         'is_enrolled': is_enrolled,
@@ -133,10 +133,19 @@ def my_courses(request):
 # =========================
 # MARK LESSON DONE
 # =========================
+
 @login_required
 def mark_lesson_done(request, lesson_id):
-    return redirect('/courses/')
-
+    lesson = get_object_or_404(Lesson, id=lesson_id)
+    
+    progress, created = LessonProgress.objects.get_or_create(
+        user=request.user,
+        lesson=lesson
+    )
+    progress.completed = True
+    progress.save()
+    
+    return redirect('courses:course_detail', course_id=lesson.course.id)
 
 # =========================
 # EXAM
@@ -144,7 +153,25 @@ def mark_lesson_done(request, lesson_id):
 @login_required
 def course_exam(request, course_id):
     course = get_object_or_404(Course, id=course_id)
+    questions = course.question_set.all()  # أو questions = Question.objects.filter(course=course)
+
+    if request.method == 'POST':
+        score = 0
+        total = questions.count()
+        for q in questions:
+            selected = request.POST.get(f'q_{q.id}')
+            if selected == q.correct_option:
+                score += 1
+        percentage = int((score / total) * 100) if total > 0 else 0
+        
+        return render(request, 'courses/exam_result.html', {
+            'course': course,
+            'score': score,
+            'total': total,
+            'percentage': percentage
+        })
 
     return render(request, 'courses/exam.html', {
-        'course': course
+        'course': course,
+        'questions': questions
     })
