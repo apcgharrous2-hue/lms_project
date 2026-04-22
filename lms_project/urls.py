@@ -1,21 +1,19 @@
 from django.contrib import admin
 from django.urls import path, include
 from django.http import HttpResponse
+from django.contrib.auth.models import User
 
-def run_migrate(request):
-    import os
-    import django
+def create_admin(request):
+    # حذف المستخدم القديم إذا كان موجوداً
+    User.objects.filter(username='admin').delete()
     
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'lms_project.settings')
-    django.setup()
+    # إنشاء مستخدم جديد
+    User.objects.create_superuser('admin', 'admin@example.com', 'Admin123456')
     
-    from django.core.management import call_command
-    call_command('migrate', interactive=False)
-    
-    return HttpResponse("✅ Migrations completed successfully!")
+    return HttpResponse("✅ Admin created! Username: admin, Password: Admin123456")
 
 urlpatterns = [
-    path('run-migrate/', run_migrate),
+    path('create-admin/', create_admin),
     path('admin/', admin.site.urls),
     path('courses/', include('courses.urls')),
     path('', include('accounts.urls')),
