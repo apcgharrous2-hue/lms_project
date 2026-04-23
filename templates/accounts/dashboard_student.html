@@ -140,10 +140,13 @@
                         {{ user.username }}
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="/admin/">
-                            <i class="fas fa-cog me-2"></i>الإدارة
-                        </a></li>
-                        <li><hr class="dropdown-divider"></li>
+                        <!-- ✅ رابط الإدارة يظهر فقط للمشرفين (is_staff=True) -->
+                        {% if user.is_staff %}
+                            <li><a class="dropdown-item" href="/admin/">
+                                <i class="fas fa-cog me-2"></i>الإدارة
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                        {% endif %}
                         <li><a class="dropdown-item text-danger" href="/logout/">
                             <i class="fas fa-sign-out-alt me-2"></i>تسجيل الخروج
                         </a></li>
