@@ -29,6 +29,9 @@ def logout_view(request):
 
 def register_view(request):
     if request.method == 'POST':
+        from django.contrib.auth.models import User
+        from django.contrib.auth import login
+        
         username = request.POST.get('username')
         password = request.POST.get('password')
         email = request.POST.get('email', '')
@@ -39,12 +42,10 @@ def register_view(request):
         # تسجيل الدخول تلقائياً
         login(request, user)
 
-        # العودة إلى الصفحة المطلوبة أو لوحة التحكم
-        next_url = request.GET.get('next', '/dashboard/')
-        return redirect(next_url)
+        # العودة إلى لوحة التحكم أو الدورات
+        return redirect('/dashboard/')  # أو '/courses/'
 
     return render(request, 'accounts/register.html')
-
 
 @login_required
 def dashboard(request):
