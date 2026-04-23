@@ -30,21 +30,26 @@ def logout_view(request):
 def register_view(request):
     if request.method == 'POST':
         from django.contrib.auth.models import User
-        from django.contrib.auth import login
         
         username = request.POST.get('username')
         password = request.POST.get('password')
         email = request.POST.get('email', '')
 
+        # ✅ التحقق من عدم وجود مستخدم بنفس الاسم
+        if User.objects.filter(username=username).exists():
+            return render(request, 'accounts/register.html', {
+                'error': f'اسم المستخدم "{username}" موجود مسبقاً. اختر اسماً آخر.'
+            })
+
         # إنشاء مستخدم جديد
         user = User.objects.create_user(username=username, password=password, email=email)
-
+        
         # تسجيل الدخول تلقائياً
         login(request, user)
-
-        # العودة إلى لوحة التحكم أو الدورات
-        return redirect('/dashboard/')  # أو '/courses/'
-
+        
+        # العودة إلى لوحة التحكم
+        return redirect('/dashboard/')
+    
     return render(request, 'accounts/register.html')
 
 @login_required
