@@ -1,21 +1,46 @@
 <!DOCTYPE html>
-<html>
+<html lang="ar" dir="rtl">
 <head>
-    <title>كورساتي</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دوراتي</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
+    <div class="container mt-5">
+        <h1 class="mb-4">
+            <i class="fas fa-bookmark me-2"></i>
+            كورساتي
+        </h1>
 
-<h1>🎓 كورساتي</h1>
-
-{% for enroll in enrollments %}
-    <div>
-        <h3>{{ enroll.course.title }}</h3>
-        <a href="/course/{{ enroll.course.id }}/">دخول</a>
+        {% if enrollments %}
+            <div class="row">
+                {% for enrollment in enrollments %}
+                    <div class="col-md-6 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ enrollment.course.title }}</h5>
+                                <p class="card-text text-muted">
+                                    تاريخ التسجيل: {{ enrollment.date_enrolled|date:"Y-m-d" }}
+                                </p>
+                                <!-- ✅ الرابط الصحيح: /courses/ وليس /course/ -->
+                                <a href="/courses/{{ enrollment.course.id }}/" class="btn btn-primary">
+                                    <i class="fas fa-arrow-left me-2"></i>
+                                    دخول
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle me-2"></i>
+                لم تسجل في أي دورة بعد.
+                <a href="/courses/" class="btn btn-primary ms-3">تصفح الدورات</a>
+            </div>
+        {% endif %}
     </div>
-    <hr>
-{% empty %}
-    <p>لم تسجل في أي كورس ❌</p>
-{% endfor %}
-
 </body>
 </html>
