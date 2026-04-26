@@ -122,8 +122,25 @@
             <h3>{{ lesson.title }}</h3>
 
             {% if lesson.video_url %}
-                <iframe src="{{ lesson.video_url }}" frameborder="0" allowfullscreen></iframe>
-            {% endif %}
+    <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; margin-bottom: 15px; border-radius: 10px;">
+        {% if 'youtube.com' in lesson.video_url or 'youtu.be' in lesson.video_url %}
+            <iframe 
+                src="https://www.youtube.com/embed/{{ lesson.video_url|slice:'-11:' }}" 
+                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+            </iframe>
+        {% else %}
+            <iframe 
+                src="{{ lesson.video_url }}" 
+                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" 
+                frameborder="0" 
+                allowfullscreen>
+            </iframe>
+        {% endif %}
+    </div>
+{% endif %}
 
             <p>{{ lesson.content }}</p>
 
